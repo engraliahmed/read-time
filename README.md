@@ -2,7 +2,7 @@
 
 ![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![TypeScript Support](https://img.shields.io/badge/TypeScript-Ready-blue)
+![JS & TS Support](https://img.shields.io/badge/JS%20%26%20TS-Ready-blue)
 ![ESM & CJS](https://img.shields.io/badge/Module-ESM%20%7C%20CJS-orange)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 
