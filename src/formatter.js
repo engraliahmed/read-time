@@ -6,7 +6,7 @@
 function formatOutput(totalSeconds, options = {}) {
     // Always round up to the nearest minute for display purposes
     const minutes = Math.ceil(totalSeconds / 60);
-    
+
     // Default to 'standard' if the developer doesn't specify a format
     const format = options.format || 'standard';
 

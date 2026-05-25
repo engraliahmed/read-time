@@ -3,7 +3,7 @@
 function parseContent(contentString) {
     // Enterprise Safety Check: Ensure the input is actually a string
     if (typeof contentString !== 'string') {
-        throw new TypeError('read-time expects a string as input.');
+        throw new TypeError('count-read-time expects a string as input.');
     }
 
     // Early Return for empty strings (O(1) execution for empty inputs)
@@ -19,13 +19,13 @@ function parseContent(contentString) {
     // Matches HTML (<pre>, <code>), Markdown (```...```), and BBCode ([code]...[/code])
     let codeText = '';
     const codeRegex = /<(pre|code)[^>]*>([\s\S]*?)<\/\1>|```([\s\S]*?)```|\[code\]([\s\S]*?)\[\/code\]/gi;
-    
+
     // This removes the code blocks from the main string and saves them,
     // guaranteeing we never double-count technical words.
     const contentWithoutCode = contentString.replace(codeRegex, (match, htmlTag, htmlContent, mdContent, bbContent) => {
         const extractedContent = htmlContent || mdContent || bbContent || match;
         codeText += ' ' + extractedContent;
-        return ''; 
+        return '';
     });
 
     // 3. Strip remaining markup to get pure, normal text

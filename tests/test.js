@@ -1,7 +1,7 @@
 // tests/test.js
 const { estimateReadTime } = require('../index.js');
 
-console.log("⏳ Running Enterprise Universal read-time tests...\n");
+console.log("⏳ Running Enterprise Universal count-read-time tests...\n");
 
 let passed = 0;
 let failed = 0;

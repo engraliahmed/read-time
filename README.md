@@ -23,7 +23,7 @@ We wanted to fix this.
 
 ## Introducing: The Universal Engine
 
-`read-time` is a zero-dependency micro-library that intelligently calculates accurate reading times by respecting technical content. 
+`count-read-time` is a zero-dependency micro-library that intelligently calculates accurate reading times by respecting technical content. 
 
 *   🧠 **Technical Weighting:** It uses a dual-speed engine. Standard text is parsed at a breezy 200 WPM, but code blocks (whether `<pre>` or Markdown ` ``` `) are automatically throttled to a careful 100 WPM.
 *   🖼️ **Medium's Image Math:** It dynamically adds time for every image it finds using a degrading scale (12s for the first image, 11s for the second, 10s for the third, and 3s for any subsequent images).
@@ -33,7 +33,7 @@ We wanted to fix this.
 
 ## The 4 Formatting Modes
 
-We believe a library should handle the UI heavy lifting for you. Out of the box, `read-time` gives you four distinct formatting modes to perfectly match your blog's aesthetic:
+We believe a library should handle the UI heavy lifting for you. Out of the box, `count-read-time` gives you four distinct formatting modes to perfectly match your blog's aesthetic:
 
 | Mode | Example Output | Best Used For |
 | :--- | :--- | :--- |
@@ -56,11 +56,11 @@ npm install count-read-time
 
 ## Usage in Any Stack
 
-`read-time` is natively compatible with **ES Modules** (Next.js, modern React) and **CommonJS** (legacy Express/Node). It even comes with `index.d.ts` for full **TypeScript** auto-completion.
+`count-read-time` is natively compatible with **ES Modules** (Next.js, modern React) and **CommonJS** (legacy Express/Node). It even comes with `index.d.ts` for full **TypeScript** auto-completion.
 
 ### ⚛️ Next.js / React
 ```javascript
-import { estimateReadTime } from 'read-time';
+import { estimateReadTime } from 'count-read-time';
 
 export default function BlogPost({ postContent }) {
     // 1. Pass your Markdown, MDX, or HTML directly
@@ -83,7 +83,7 @@ export default function BlogPost({ postContent }) {
 ```vue
 <script setup>
 import { computed } from 'vue';
-import { estimateReadTime } from 'read-time';
+import { estimateReadTime } from 'count-read-time';
 
 const props = defineProps(['htmlContent']);
 
@@ -104,7 +104,7 @@ const readTime = computed(() => {
 ### 🧡 Svelte / SvelteKit
 ```svelte
 <script>
-    import { estimateReadTime } from 'read-time';
+    import { estimateReadTime } from 'count-read-time';
     
     export let data; // Comes from your load function
     
@@ -120,7 +120,7 @@ const readTime = computed(() => {
 ### 🟢 Node.js / Express Backend
 ```javascript
 const express = require('express');
-const { estimateReadTime } = require('read-time');
+const { estimateReadTime } = require('count-read-time');
 
 const app = express();
 
@@ -139,7 +139,7 @@ app.post('/api/articles', (req, res) => {
 No bundler? No problem.
 ```html
 <script type="module">
-    import { estimateReadTime } from 'https://unpkg.com/read-time';
+    import { estimateReadTime } from 'https://unpkg.com/count-read-time';
     
     const blogText = document.getElementById('blog-content').innerText;
     const time = estimateReadTime(blogText, { format: 'coffee' });

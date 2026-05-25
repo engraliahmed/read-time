@@ -24,12 +24,12 @@ function estimateReadTime(contentString, options = {}) {
 
         // 4. Format and return the output
         return formatOutput(totalSeconds, options);
-        
+
     } catch (error) {
         // Enterprise safety: If something catastrophically fails, log it 
         // but don't crash the user's app. Return a safe fallback.
-        console.error('[read-time error]:', error.message);
-        return formatOutput(0, options); 
+        console.error('[count-read-time error]:', error.message);
+        return formatOutput(0, options);
     }
 }
 
