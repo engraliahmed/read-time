@@ -1,6 +1,6 @@
 {
   "name": "count-read-time",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An enterprise-grade, highly scalable reading time estimator with technical content weighting and image compensation.",
   "main": "index.js",
   "types": "index.d.ts",
