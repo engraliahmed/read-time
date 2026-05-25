@@ -1,5 +1,5 @@
 {
-  "name": "read-time",
+  "name": "count-read-time",
   "version": "1.0.0",
   "description": "An enterprise-grade, highly scalable reading time estimator with technical content weighting and image compensation.",
   "main": "index.js",

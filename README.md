@@ -49,7 +49,7 @@ We believe a library should handle the UI heavy lifting for you. Out of the box,
 Because it is 100% dependency-free, you can safely install it in any project without bloating your `node_modules`.
 
 ```bash
-npm install read-time
+npm install count-read-time
 ```
 
 ---

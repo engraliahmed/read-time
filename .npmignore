@@ -1,0 +1,4 @@
+# Ignore these files when publishing to NPM to keep the package lightweight
+playground.html
+tests/
+.github/
