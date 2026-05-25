@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read-Time Playground</title>
+    <style>
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+            padding: 2rem; 
+            background: #0f172a; 
+            color: #f8fafc; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        textarea { 
+            width: 100%; 
+            height: 300px; 
+            padding: 1rem; 
+            background: #1e293b; 
+            color: #e2e8f0; 
+            border: 1px solid #334155; 
+            border-radius: 8px; 
+            font-family: monospace; 
+            font-size: 14px;
+            margin-bottom: 1rem;
+        }
+        .result { 
+            font-size: 2.5rem; 
+            font-weight: bold; 
+            margin-top: 1rem; 
+            color: #10b981; 
+            padding: 1.5rem;
+            background: #1e293b;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+        select { 
+            padding: 0.5rem; 
+            background: #1e293b; 
+            color: white; 
+            border-radius: 4px; 
+            border: 1px solid #334155; 
+            margin-bottom: 1rem; 
+            font-size: 16px;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-content">
+            <h1>⏳ Read-Time Playground</h1>
+            <select id="formatSelect">
+                <option value="standard">Standard Format</option>
+                <option value="coffee" selected>Coffee Format (☕)</option>
+                <option value="hourglass">Hourglass Format (⏳)</option>
+            </select>
+        </div>
+        
+        <p>Type or paste any HTML into the box below. Watch the reading time update instantly as you add text, code blocks, and images!</p>
+
+        <textarea id="inputHtml"></textarea>
+        
+        <div class="result" id="resultDisplay">☕ 0 min read</div>
+    </div>
+
+    <script>
+        // --- Core Library Code ---
+        const CONSTANTS = {
+            NORMAL_WPM: 200,
+            CODE_WPM: 100,
+            IMAGE_TIMING: { FIRST: 12, SECOND: 11, THIRD: 10, DEFAULT: 3 }
+        };
+
+        function parseContent(contentString) {
+            if (!contentString || contentString.trim().length === 0) return { normalText: '', codeText: '', imageCount: 0 };
+            const imageMatches = contentString.match(/<img[^>]+>|!\[.*?\]\(.*?\)/gi);
+            const imageCount = imageMatches ? imageMatches.length : 0;
+            let codeText = '';
+            const codeRegex = /<(pre|code)[^>]*>([\s\S]*?)<\/\1>|```([\s\S]*?)```|\[code\]([\s\S]*?)\[\/code\]/gi;
+            const contentWithoutCode = contentString.replace(codeRegex, (match, htmlTag, htmlContent, mdContent, bbContent) => {
+                codeText += ' ' + (htmlContent || mdContent || bbContent || match); return ''; 
+            });
+            let normalText = contentWithoutCode
+                .replace(/<[^>]+>/g, ' ')
+                .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+                .replace(/[#*>`~_-]/g, ' ')
+                .trim();
+            const cleanCodeText = codeText.replace(/<[^>]+>/g, ' ').trim();
+            return { normalText, codeText: cleanCodeText, imageCount };
+        }
+
+        function countWords(text) {
+            if (!text) return 0;
+            const words = text.match(/\S+/g);
+            return words ? words.length : 0;
+        }
+
+        function calculateImageTime(imageCount) {
+            let seconds = 0;
+            for (let i = 1; i <= imageCount; i++) {
+                if (i === 1) seconds += CONSTANTS.IMAGE_TIMING.FIRST;
+                else if (i === 2) seconds += CONSTANTS.IMAGE_TIMING.SECOND;
+                else if (i === 3) seconds += CONSTANTS.IMAGE_TIMING.THIRD;
+                else seconds += CONSTANTS.IMAGE_TIMING.DEFAULT;
+            }
+            return seconds;
+        }
+
+        function calculateTotalSeconds(normalWordCount, codeWordCount, imageCount) {
+            const normalMinutes = normalWordCount / CONSTANTS.NORMAL_WPM;
+            const codeMinutes = codeWordCount / CONSTANTS.CODE_WPM;
+            const textSeconds = (normalMinutes + codeMinutes) * 60;
+            const imageSeconds = calculateImageTime(imageCount);
+            return Math.round(textSeconds + imageSeconds);
+        }
+
+        function formatOutput(totalSeconds, options = {}) {
+            const minutes = Math.ceil(totalSeconds / 60);
+            const format = options.format || 'standard';
+            if (format === 'raw') return { seconds: totalSeconds, minutes };
+            if (format === 'coffee') {
+                const cupsCount = Math.max(1, Math.ceil(minutes / 5));
+                return `${'☕'.repeat(cupsCount)} ${minutes} min read`;
+            }
+            if (format === 'hourglass') return `⏳ ${minutes} mins`;
+            return `${minutes} min read`;
+        }
+
+        function estimateReadTime(contentString, options = {}) {
+            try {
+                const { normalText, codeText, imageCount } = parseContent(contentString);
+                const normalWordCount = countWords(normalText);
+                const codeWordCount = countWords(codeText);
+                const totalSeconds = calculateTotalSeconds(normalWordCount, codeWordCount, imageCount);
+                return formatOutput(totalSeconds, options);
+            } catch (error) {
+                return formatOutput(0, options); 
+            }
+        }
+
+        // --- Interactive UI Logic ---
+        const input = document.getElementById('inputHtml');
+        const display = document.getElementById('resultDisplay');
+        const select = document.getElementById('formatSelect');
+
+        function updateDisplay() {
+            const html = input.value;
+            const format = select.value;
+            display.innerText = estimateReadTime(html, { format });
+        }
+
+        input.addEventListener('input', updateDisplay);
+        select.addEventListener('change', updateDisplay);
+        
+        // Setup initial demo content
+        input.value = `# Universal Content Engine
+
+You can pass standard HTML like this:
+<p>This is a normal paragraph to demonstrate the normal 200 WPM speed.</p>
+<pre><code>const a = 1;</code></pre>
+
+Or you can just pass pure Markdown:
+This is a standard markdown paragraph with a [link](https://test.com).
+
+And here is a markdown code block that calculates at 100 WPM:
+\`\`\`javascript
+function universalTime() {
+    return true;
+}
+\`\`\`
+
+Here is an image, it adds 12 seconds:
+![Test Image](diagram.png)
+
+Or you can just type raw plain text and the engine will gracefully fall back to counting pure words!`;
+        
+        updateDisplay();
+    </script>
+</body>
+</html>

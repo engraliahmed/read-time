@@ -1,0 +1,27 @@
+{
+  "name": "read-time",
+  "version": "1.0.0",
+  "description": "An enterprise-grade, highly scalable reading time estimator with technical content weighting and image compensation.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "require": "./index.js"
+    }
+  },
+  "scripts": {
+    "test": "node tests/test.js"
+  },
+  "keywords": [
+    "reading-time",
+    "read-time",
+    "estimator",
+    "wpm",
+    "medium",
+    "technical-reading"
+  ],
+  "author": "Ali Ahmed",
+  "license": "Apache-2.0"
+}
